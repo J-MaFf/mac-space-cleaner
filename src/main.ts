@@ -52,7 +52,7 @@ async function main() {
   }
 
   // Handle deletion if requested
-  if (opts.confirmDelete || opts.dryRun) {
+  if (opts.confirmDelete || opts.dryRun || opts.interactive) {
     if (analysis.suggestions.length === 0) {
       console.log('No suggestions to delete.');
       return;
