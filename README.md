@@ -30,21 +30,71 @@ mac-space-cleaner
 
 1. Clone the repository:
 
-   ```
-   git clone https://github.com/yourusername/mac-space-cleaner.git
-   ```
-
-2. Navigate to the project directory:
-
-   ```
+   ```bash
+   git clone https://github.com/J-MaFf/mac-space-cleaner.git
    cd mac-space-cleaner
    ```
 
-3. Install the dependencies:
+2. Install the dependencies:
 
-   ```
+   ```bash
    npm install
    ```
+
+## Development
+
+### Build
+
+Compile TypeScript to JavaScript:
+
+```bash
+npm run build
+```
+
+Output goes to `dist/` directory.
+
+### Testing
+
+Run the test suite:
+
+```bash
+npm test          # Run all tests
+npm run test:watch     # Watch mode for development
+npm run test:coverage  # Generate coverage report
+```
+
+Tests are located in `src/__tests__/` and `src/*.test.ts` files and cover:
+- **Analyzer**: Categorization, filtering, scoring, and reporting
+- **Deleter**: Safe deletion, dry-run mode, and logging
+- **Scanner**: File discovery with depth/file limits, symlink handling
+
+### Project Structure
+
+```
+mac-space-cleaner/
+├── src/
+│   ├── main.ts              # CLI entry point with argument parsing
+│   ├── scanner.ts           # File system scanning
+│   ├── analyzer.ts          # File analysis and categorization
+│   ├── deleter.ts           # Safe file deletion and logging
+│   ├── types/
+│   │   └── index.ts         # TypeScript type definitions
+│   ├── utils/
+│   │   ├── fileUtils.ts     # Legacy file utilities
+│   │   └── prompt.ts        # Interactive CLI prompts
+│   ├── analyzer.test.ts     # Analyzer unit tests
+│   ├── deleter.test.ts      # Deleter unit tests
+│   └── scanner.test.ts      # Scanner unit tests
+├── .github/
+│   ├── copilot-instructions.md  # AI assistant context
+│   └── workflows/
+│       └── ci.yml           # GitHub Actions CI/CD pipeline
+├── package.json             # Project dependencies
+├── tsconfig.json            # TypeScript compiler options
+├── jest.config.json         # Jest testing configuration
+├── LICENSE                  # MIT License
+└── README.md                # This file
+```
 
 ## Usage
 
@@ -118,8 +168,23 @@ Categories covered:
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Make your changes and add tests
+4. Run tests: `npm test`
+5. Build and verify: `npm run build`
+6. Commit with a clear message
+7. Push and open a Pull Request
+
+## Support
+
+If you encounter issues or have questions:
+
+- Check existing [GitHub issues](https://github.com/J-MaFf/mac-space-cleaner/issues)
+- Open a new issue with details about your environment and problem
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
