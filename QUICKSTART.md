@@ -30,12 +30,14 @@ npm start
 ## Common Commands (Copy & Paste)
 
 ### 👀 Preview without risk
+
 ```bash
 # See what would be deleted (safe preview)
 npm start -- --only-category=trash --dry-run
 ```
 
 ### 🗑️ Delete specific categories
+
 ```bash
 # Delete trash files with confirmation
 npm start -- --only-category=trash --interactive
@@ -48,6 +50,7 @@ npm start -- --only-category=cache --confirm-delete
 ```
 
 ### 📊 Scan specific folders
+
 ```bash
 # Just scan Downloads
 npm start -- --paths=/Users/$USER/Downloads
@@ -57,6 +60,7 @@ npm start -- --paths=/Users/$USER/Downloads,/Users/$USER/Library/Caches
 ```
 
 ### 🎯 Custom thresholds
+
 ```bash
 # Large files over 50 MB
 npm start -- --sizeMB=50
@@ -69,6 +73,7 @@ npm start -- --exclude-patterns=node_modules,.git,dist
 ```
 
 ### 📋 Machine-readable output
+
 ```bash
 # Get JSON for scripting
 npm start -- --json > results.json
@@ -85,21 +90,25 @@ npm start -- --json | jq '.suggestions | length'
 ⚠️ **Always follow this order**:
 
 1. **First time?** Just scan:
+
    ```bash
    npm start
    ```
 
 2. **Want to delete?** Preview first:
+
    ```bash
    npm start -- --dry-run --only-category=trash
    ```
 
 3. **Ready to delete?** Get confirmation:
+
    ```bash
    npm start -- --only-category=trash --interactive
    ```
 
 4. **Check the log**:
+
    ```bash
    cat ~/.mac-space-cleaner/deletions-*.log
    ```
@@ -107,6 +116,7 @@ npm start -- --json | jq '.suggestions | length'
 ## What Gets Scanned?
 
 Default scan paths:
+
 - `~/Downloads` - Old downloaded files
 - `~/Library/Caches` - App caches
 - `~/Library/Logs` - Log files
@@ -156,18 +166,22 @@ OUTPUT:
 ## Troubleshooting
 
 **"No files found"**
+
 - Try lower thresholds: `--sizeMB=10 --days=7`
 - Check paths exist: `--paths=/Users/$USER/Downloads`
 
 **"Permission denied"**
+
 - Some files may be protected (normal)
 - Continue with: `sudo npm start -- --confirm-delete`
 
 **"Too slow"**
+
 - Reduce scope: `--paths=/specific/path`
 - Lower depth: `--maxDepth=2`
 
 **Need help?**
+
 - Read [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 - Check [README.md](README.md) for detailed docs
 

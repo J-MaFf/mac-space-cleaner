@@ -1,5 +1,5 @@
-import { Deleter } from '../deleter';
-import { Suggestion, FileInfo } from '../types';
+import { Deleter } from './deleter';
+import { Suggestion, FileInfo } from './types';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';

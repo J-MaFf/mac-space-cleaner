@@ -7,6 +7,10 @@
   "collectCoverageFrom": [
     "src/**/*.ts",
     "!src/**/*.d.ts",
-    "!src/main.ts"
-  ]
+    "!src/main.ts",
+    "!src/**/*.test.ts"
+  ],
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/src/$1"
+  }
 }

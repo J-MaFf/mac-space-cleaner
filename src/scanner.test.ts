@@ -1,4 +1,4 @@
-import { Scanner } from '../scanner';
+import { Scanner } from './scanner';
 import fs from 'fs';
 import path from 'path';
 

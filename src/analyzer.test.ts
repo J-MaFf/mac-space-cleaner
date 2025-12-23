@@ -1,5 +1,5 @@
-import { Analyzer } from '../analyzer';
-import { FileInfo } from '../types';
+import { Analyzer } from './analyzer';
+import { FileInfo } from './types';
 
 describe('Analyzer', () => {
   let analyzer: Analyzer;
