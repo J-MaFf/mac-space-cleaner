@@ -29,26 +29,92 @@ mac-space-cleaner
 ## Installation
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/yourusername/mac-space-cleaner.git
    ```
+
 2. Navigate to the project directory:
+
    ```
    cd mac-space-cleaner
    ```
+
 3. Install the dependencies:
+
    ```
    npm install
    ```
 
 ## Usage
 
-To run the application, execute the following command:
+Run the scanner (suggest-only by default):
+
 ```
 npm start
 ```
 
-The application will initiate a scan of your Mac's file system and provide suggestions for files that can be deleted to free up space.
+### Flags
+
+**Scanning options:**
+
+- `--json`: Output JSON instead of text.
+- `--sizeMB=100`: Threshold for large files (default 100).
+- `--days=30`: Age threshold for old downloads (default 30).
+- `--paths=/custom/path1,/custom/path2`: Comma-separated paths to scan.
+- `--maxDepth=4`: Max directory recursion depth.
+- `--maxFiles=20000`: Hard cap on total files scanned.
+
+**Filtering options:**
+
+- `--exclude-patterns=node_modules,dist`: Comma-separated path patterns to skip.
+- `--only-category=trash`: Only suggest files from a specific category.
+
+**Deletion options:**
+
+- `--dry-run`: Preview deletions without actually deleting.
+- `--confirm-delete`: Skip confirmation prompt and delete immediately.
+- `--interactive`: Prompt for confirmation before deleting (default if `--confirm-delete` not set).
+
+### Examples
+
+```bash
+# Scan and show report
+npm start
+
+# JSON output
+npm start -- --json
+
+# Custom thresholds
+npm start -- --sizeMB=250 --days=60
+
+# Exclude patterns
+npm start -- --exclude-patterns=node_modules,.git,dist
+
+# Only show trash suggestions
+npm start -- --only-category=trash
+
+# Preview deletions without actually deleting
+npm start -- --dry-run
+
+# Delete trash only after confirmation
+npm start -- --only-category=trash --interactive
+
+# Delete without prompt (use carefully!)
+npm start -- --confirm-delete --dry-run
+```
+
+Categories covered:
+
+- Large files
+- Old files in Downloads
+- Caches (Library/Caches, Homebrew)
+- Build artifacts (Xcode DerivedData)
+- Package manager caches (npm/yarn)
+- Logs
+- Trash
+
+**Safety:** This tool only suggests files by default. Use `--dry-run` to preview, then add `--confirm-delete` to actually delete. Deletion logs are saved to `~/.mac-space-cleaner/deletions-YYYY-MM-DD.log`.
 
 ## Contributing
 

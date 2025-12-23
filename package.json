@@ -2,20 +2,19 @@
   "name": "mac-space-cleaner",
   "version": "1.0.0",
   "description": "A utility to scan and suggest files for deletion on macOS.",
-  "main": "src/main.ts",
+  "main": "dist/main.js",
   "scripts": {
     "start": "ts-node src/main.ts",
     "build": "tsc",
     "test": "jest"
   },
-  "dependencies": {
-    "ts-node": "^10.0.0",
-    "typescript": "^4.0.0",
-    "jest": "^27.0.0"
-  },
+  "keywords": ["macos", "cleanup", "disk-space", "file-deletion"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^27.0.0",
-    "@types/node": "^16.0.0"
-  },
-  "license": "MIT"
+    "@types/node": "^18.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  }
 }

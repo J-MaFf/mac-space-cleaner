@@ -5,6 +5,8 @@ export interface AnalyzeOptions {
     sizeThresholdMB?: number;
     ageThresholdDays?: number;
     topN?: number;
+    excludePatterns?: string[];
+    onlyCategory?: Category;
 }
 
 export class Analyzer {
@@ -55,6 +57,13 @@ export class Analyzer {
             byCategory[effectiveCategory].size += f.size;
 
             if (reason) {
+                // Apply filters
+                if (this.options.excludePatterns?.some(p => f.path.includes(p))) {
+                    continue;
+                }
+                if (this.options.onlyCategory && effectiveCategory !== this.options.onlyCategory) {
+                    continue;
+                }
                 suggestions.push({ file: { ...f, category: effectiveCategory }, category: effectiveCategory, reason, score });
             }
         }
