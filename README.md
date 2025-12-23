@@ -2,12 +2,17 @@
 
 Mac Space Cleaner is a utility application designed to help users identify and delete unnecessary files on their Mac to free up disk space. This project scans the file system, analyzes file metadata, and suggests files that can be safely removed.
 
+**⚡ New to this tool?** Start with [QUICKSTART.md](QUICKSTART.md) for common commands and examples.
+
 ## Features
 
-- Scans the file system for files and directories.
-- Analyzes files based on size, type, and last accessed date.
-- Generates a user-friendly report of suggested files for deletion.
-- Provides utility functions for reading and deleting files.
+- **Smart Scanning**: Recursively walks your Mac's file system with configurable depth limits
+- **Intelligent Categorization**: Automatically detects trash, caches, logs, old downloads, and large files
+- **Safe by Default**: Read-only suggestions; requires explicit confirmation to delete
+- **Flexible Filtering**: Exclude patterns, filter by category, set custom size/age thresholds
+- **Dry-run Mode**: Preview deletions before they happen
+- **Deletion Logging**: All deletions logged to `~/.mac-space-cleaner/` for recovery if needed
+- **JSON Output**: Machine-readable format for scripts and automation
 
 ## Project Structure
 
@@ -64,6 +69,7 @@ npm run test:coverage  # Generate coverage report
 ```
 
 Tests are located in `src/__tests__/` and `src/*.test.ts` files and cover:
+
 - **Analyzer**: Categorization, filtering, scoring, and reporting
 - **Deleter**: Safe deletion, dry-run mode, and logging
 - **Scanner**: File discovery with depth/file limits, symlink handling
@@ -95,6 +101,14 @@ mac-space-cleaner/
 ├── LICENSE                  # MIT License
 └── README.md                # This file
 ```
+
+## Documentation
+
+- **[QUICKSTART.md](QUICKSTART.md)** - Get started in 5 minutes with common commands
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Development setup, testing, and contribution guide
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Solutions for common issues
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history and feature list
+- **.github/copilot-instructions.md** - Architecture and extension guidelines
 
 ## Usage
 
