@@ -18,6 +18,7 @@ function parseArgs(argv: string[]) {
     dryRun: args.get('dry-run') === true,
     confirmDelete: args.get('confirm-delete') === true,
     interactive: args.get('interactive') === true,
+    yes: args.get('yes') === true,
     sizeMB: Number(args.get('sizeMB') ?? 100),
     days: Number(args.get('days') ?? 30),
     paths: (args.get('paths') && typeof args.get('paths') === 'string')
@@ -52,14 +53,14 @@ async function main() {
   }
 
   // Handle deletion if requested
-  if (opts.confirmDelete || opts.dryRun || opts.interactive) {
+  if (opts.confirmDelete || opts.dryRun || opts.interactive || opts.yes) {
     if (analysis.suggestions.length === 0) {
       console.log('No suggestions to delete.');
       return;
     }
 
-    let shouldDelete = opts.confirmDelete;
-    if (opts.interactive && !opts.confirmDelete) {
+    let shouldDelete = opts.confirmDelete || opts.yes;
+    if (opts.interactive && !opts.confirmDelete && !opts.yes) {
       const rl = createReadlineInterface();
       shouldDelete = await confirmDelete(rl, analysis.suggestions.length);
       rl.close();
