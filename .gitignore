@@ -1,0 +1,26 @@
+# Node
+node_modules/
+dist/
+coverage/
+
+# Logs
+*.log
+logs/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# VS Code
+.vscode/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# TypeScript build info
+*.tsbuildinfo
