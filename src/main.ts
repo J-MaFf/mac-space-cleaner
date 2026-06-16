@@ -77,7 +77,7 @@ async function main() {
       const result = await deleter.delete(analysis.suggestions);
       if (!opts.json) {
         console.log(
-          `\n${opts.dryRun ? 'DRY-RUN: ' : ''}${result.deleted} deleted, ${result.failed} failed, ${result.skipped} skipped`
+          `\n${opts.dryRun ? 'DRY-RUN: ' : ''}${result.deleted} deleted, ${result.failed} failed, ${result.skipped} skipped${result.blocked ? `, ${result.blocked} blocked (outside home dir)` : ''}`
         );
       }
     }
