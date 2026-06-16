@@ -156,8 +156,10 @@ FILTERING:
 
 DELETION:
   --dry-run           Preview without deleting
-  --confirm-delete    Delete without prompting
-  --interactive       Prompt for confirmation (default)
+  --confirm-delete    Delete after a [y/N] confirmation prompt
+  --interactive       Prompt for confirmation before deleting
+  --auto-delete       Delete immediately with NO prompt (non-interactive)
+  --yes               Alias for --auto-delete (skip the prompt)
 
 OUTPUT:
   --json              Machine-readable JSON format
@@ -173,7 +175,7 @@ OUTPUT:
 **"Permission denied"**
 
 - Some files may be protected (normal)
-- Continue with: `sudo npm start -- --confirm-delete`
+- Continue with: `sudo npm start -- --confirm-delete` (you'll be prompted) or `--auto-delete` to skip the prompt
 
 **"Too slow"**
 
