@@ -10,6 +10,10 @@ describe('Scanner', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Default: all paths exist — prevents existsSync filter from silently
+    // dropping default scan targets (see issue #14). Individual tests that
+    // need non-existence can override this with .mockReturnValue(false).
+    mockFs.existsSync.mockReturnValue(true);
   });
 
   describe('scan', () => {
