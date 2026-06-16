@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `~/.Trash` contents are no longer bulk-deleted behind a count-only prompt.
+  Before any deletion (including non-interactive `--yes`/`--auto-delete`), the
+  actual Trash paths and sizes are now printed — capped at a 20-item sample with
+  an "N more" line ([#4](https://github.com/J-MaFf/mac-space-cleaner/issues/4)).
+
 - Added a home-directory safety guard in the deleter: every path is verified to
   be a strict descendant of `os.homedir()` (symlinks/traversal resolved) before
   any `rmSync`/`unlinkSync`. Paths like `/`, `/usr`, or `~/..` are now refused
