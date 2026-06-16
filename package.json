@@ -16,7 +16,7 @@
     "disk-space",
     "file-deletion"
   ],
-  "author": "",
+  "author": "Joey Maffiola <7maffiolajoey@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "minimatch": "^3.1.5"
