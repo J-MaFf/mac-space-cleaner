@@ -17,6 +17,7 @@ function parseArgs(argv: string[]) {
     json: args.get('json') === true,
     dryRun: args.get('dry-run') === true,
     confirmDelete: args.get('confirm-delete') === true,
+    autoDelete: args.get('auto-delete') === true,
     interactive: args.get('interactive') === true,
     yes: args.get('yes') === true,
     sizeMB: Number(args.get('sizeMB') ?? 100),
@@ -53,14 +54,19 @@ async function main() {
   }
 
   // Handle deletion if requested
-  if (opts.confirmDelete || opts.dryRun || opts.interactive || opts.yes) {
+  if (opts.confirmDelete || opts.dryRun || opts.interactive || opts.yes || opts.autoDelete) {
     if (analysis.suggestions.length === 0) {
       console.log('No suggestions to delete.');
       return;
     }
 
-    let shouldDelete = opts.confirmDelete || opts.yes;
-    if (opts.interactive && !opts.confirmDelete && !opts.yes) {
+    // Non-interactive deletion (no prompt) only when explicitly requested via
+    // --auto-delete or --yes. --confirm-delete now ALWAYS shows a confirmation
+    // prompt, matching the safety expectation set by its name.
+    let shouldDelete = opts.autoDelete || opts.yes;
+
+    // --confirm-delete (and --interactive) require an interactive y/N prompt.
+    if ((opts.confirmDelete || opts.interactive) && !shouldDelete) {
       const rl = createReadlineInterface();
       shouldDelete = await confirmDelete(rl, analysis.suggestions.length);
       rl.close();

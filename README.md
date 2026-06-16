@@ -137,8 +137,10 @@ npm start
 **Deletion options:**
 
 - `--dry-run`: Preview deletions without actually deleting.
-- `--confirm-delete`: Skip confirmation prompt and delete immediately.
-- `--interactive`: Prompt for confirmation before deleting (default if `--confirm-delete` not set).
+- `--confirm-delete`: Delete after an interactive `[y/N]` confirmation prompt.
+- `--interactive`: Prompt for confirmation before deleting.
+- `--auto-delete`: Delete immediately with **no** prompt (non-interactive; use carefully).
+- `--yes`: Alias for `--auto-delete` — skip the prompt and delete non-interactively.
 
 ### Examples
 
@@ -161,11 +163,11 @@ npm start -- --only-category=trash
 # Preview deletions without actually deleting
 npm start -- --dry-run
 
-# Delete trash only after confirmation
-npm start -- --only-category=trash --interactive
+# Delete trash only after confirmation (--confirm-delete prompts for y/N)
+npm start -- --only-category=trash --confirm-delete
 
-# Delete without prompt (use carefully!)
-npm start -- --confirm-delete --dry-run
+# Delete without any prompt (non-interactive, use carefully!)
+npm start -- --only-category=trash --auto-delete
 ```
 
 Categories covered:
@@ -178,7 +180,7 @@ Categories covered:
 - Logs
 - Trash
 
-**Safety:** This tool only suggests files by default. Use `--dry-run` to preview, then add `--confirm-delete` to actually delete. Deletion logs are saved to `~/.mac-space-cleaner/deletions-YYYY-MM-DD.log`.
+**Safety:** This tool only suggests files by default. Use `--dry-run` to preview, then add `--confirm-delete` to delete after a `[y/N]` confirmation prompt (or `--auto-delete`/`--yes` to delete non-interactively). Deletion logs are saved to `~/.mac-space-cleaner/deletions-YYYY-MM-DD.log`.
 
 ## Contributing
 
