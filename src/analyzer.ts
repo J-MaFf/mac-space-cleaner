@@ -1,4 +1,5 @@
 import path from 'path';
+import minimatch from 'minimatch';
 import { AnalysisResult, Category, FileInfo, Suggestion } from './types';
 
 export interface AnalyzeOptions {
@@ -58,7 +59,7 @@ export class Analyzer {
 
             if (reason) {
                 // Apply filters
-                if (this.options.excludePatterns?.some(p => f.path.includes(p))) {
+                if (this.options.excludePatterns && this.matchesExclude(f.path, this.options.excludePatterns)) {
                     continue;
                 }
                 if (this.options.onlyCategory && effectiveCategory !== this.options.onlyCategory) {
@@ -113,6 +114,28 @@ export class Analyzer {
             }
         }
         return out;
+    }
+
+    /**
+     * Returns true if `filePath` matches any of the exclude `patterns` using glob
+     * semantics (minimatch). To stay backward-compatible with bare names like
+     * "node_modules" while fixing the substring bug (where "node" wrongly matched
+     * "node-installer.dmg"), each pattern is tested against:
+     *   - the full path (so globs like "**\/cache/**" or "*.dmg" work),
+     *   - the basename (so "*.log" or "build" match the file/dir name), and
+     *   - each individual path segment (so a bare "node_modules" matches the
+     *     directory segment but a bare "node" does NOT match "node-installer.dmg").
+     */
+    private matchesExclude(filePath: string, patterns: string[]): boolean {
+        const opts = { dot: true, nocase: false };
+        const base = path.basename(filePath);
+        const segments = filePath.split(path.sep).filter(Boolean);
+        return patterns.some(pattern => {
+            if (!pattern) return false;
+            if (minimatch(filePath, pattern, opts)) return true;
+            if (minimatch(base, pattern, opts)) return true;
+            return segments.some(seg => minimatch(seg, pattern, opts));
+        });
     }
 
     private detectCategory(f: FileInfo): Category {
