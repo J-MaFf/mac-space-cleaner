@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Added a home-directory safety guard in the deleter: every path is verified to
+  be a strict descendant of `os.homedir()` (symlinks/traversal resolved) before
+  any `rmSync`/`unlinkSync`. Paths like `/`, `/usr`, or `~/..` are now refused
+  and counted as "blocked" instead of deleted
+  ([#3](https://github.com/J-MaFf/mac-space-cleaner/issues/3)).
+
 - `--confirm-delete` no longer deletes without prompting. It now always shows an
   interactive `[y/N]` confirmation prompt, matching the safety its name implies
   ([#2](https://github.com/J-MaFf/mac-space-cleaner/issues/2)).
