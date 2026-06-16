@@ -2,7 +2,7 @@ import { Scanner } from './scanner';
 import { Analyzer } from './analyzer';
 import { Deleter } from './deleter';
 import { confirmDelete, createReadlineInterface } from './utils/prompt';
-import { Category } from './types';
+import { Category, Suggestion } from './types';
 
 function parseArgs(argv: string[]) {
   const args = new Map<string, string | boolean>();
@@ -34,6 +34,30 @@ function parseArgs(argv: string[]) {
   };
 }
 
+function fmtBytes(bytes: number): string {
+  const mb = bytes / (1024 * 1024);
+  if (mb < 1024) return `${mb.toFixed(1)} MB`;
+  return `${(mb / 1024).toFixed(2)} GB`;
+}
+
+// Show the actual ~/.Trash paths (a capped sample) before any bulk deletion so
+// the user always sees WHAT is being removed from Trash, not just a count.
+function printTrashPaths(suggestions: Suggestion[], sampleSize = 20): void {
+  const trash = suggestions.filter(s => s.category === 'trash');
+  if (trash.length === 0) return;
+
+  const totalSize = trash.reduce((acc, s) => acc + s.file.size, 0);
+  console.log(`\nTrash: ${trash.length} item(s), ${fmtBytes(totalSize)} to be deleted:`);
+
+  const shown = trash.slice(0, sampleSize);
+  for (const s of shown) {
+    console.log(`  - ${s.file.path} (${fmtBytes(s.file.size)})`);
+  }
+  if (trash.length > shown.length) {
+    console.log(`  ... and ${trash.length - shown.length} more Trash item(s) not shown`);
+  }
+}
+
 async function main() {
   const opts = parseArgs(process.argv);
   const scanner = new Scanner({ maxDepth: opts.maxDepth, maxFiles: opts.maxFiles });
@@ -59,6 +83,10 @@ async function main() {
       console.log('No suggestions to delete.');
       return;
     }
+
+    // Always surface the actual Trash paths before bulk deletion, including in
+    // non-interactive --yes/--auto-delete mode (issue #4).
+    printTrashPaths(analysis.suggestions);
 
     // Non-interactive deletion (no prompt) only when explicitly requested via
     // --auto-delete or --yes. --confirm-delete now ALWAYS shows a confirmation
