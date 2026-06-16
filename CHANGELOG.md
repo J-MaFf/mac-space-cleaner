@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `--confirm-delete` no longer deletes without prompting. It now always shows an
+  interactive `[y/N]` confirmation prompt, matching the safety its name implies
+  ([#2](https://github.com/J-MaFf/mac-space-cleaner/issues/2)).
+
+### Added
+
+- `--auto-delete` flag for explicit non-interactive deletion with no prompt
+  (`--yes` is an alias). This replaces the old, surprising `--confirm-delete`
+  bypass behavior ([#2](https://github.com/J-MaFf/mac-space-cleaner/issues/2)).
+
 ### Planned Features
 
 - Interactive UI mode for easier file selection
