@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `--exclude-patterns` now uses minimatch glob matching instead of naive
+  substring matching. Patterns are tested against the full path, the basename,
+  and each path segment, so `node` no longer wrongly excludes
+  `node-installer.dmg` while `node_modules` and globs like `*.dmg` still work
+  ([#6](https://github.com/J-MaFf/mac-space-cleaner/issues/6)).
+
 ### Fixed
 
 - `~/.Trash` contents are no longer bulk-deleted behind a count-only prompt.

@@ -71,16 +71,69 @@ describe('Analyzer', () => {
         },
       ];
 
+      // Without excludePatterns, both are large files (> 100 MB) and ARE
+      // suggested (category 'other').
       const result = analyzer.analyze(files);
-      // Without excludePatterns, both should be suggested as large
-      expect(result.suggestions.length).toBe(0); // other category not suggested
+      expect(result.suggestions.length).toBe(2);
 
+      // With excludePatterns matching the directory segments, both are skipped.
       const analyzerWithExclude = new Analyzer({
         sizeThresholdMB: 100,
         excludePatterns: ['node_modules', 'dist'],
       });
       const resultWithExclude = analyzerWithExclude.analyze(files);
       expect(resultWithExclude.suggestions.length).toBe(0);
+    });
+
+    it('should use glob matching, not substring (issue #6)', () => {
+      const files: FileInfo[] = [
+        {
+          // A bare 'node' pattern must NOT exclude this — substring matching
+          // wrongly did; glob segment/basename matching does not.
+          path: '/Users/test/Downloads/node-installer.dmg',
+          name: 'node-installer.dmg',
+          size: 200 * 1024 * 1024,
+          mtime: new Date(),
+        },
+        {
+          // ...but a real 'node_modules' directory segment is still excluded.
+          path: '/Users/test/Downloads/node_modules/big.bin',
+          name: 'big.bin',
+          size: 200 * 1024 * 1024,
+          mtime: new Date(),
+        },
+      ];
+
+      const analyzer6 = new Analyzer({
+        sizeThresholdMB: 100,
+        excludePatterns: ['node'],
+      });
+      const result = analyzer6.analyze(files);
+      // node-installer.dmg survives; node_modules/big.bin is NOT excluded by
+      // the bare 'node' pattern (segment is 'node_modules', not 'node').
+      const paths = result.suggestions.map(s => s.file.path);
+      expect(paths).toContain('/Users/test/Downloads/node-installer.dmg');
+      expect(paths).toContain('/Users/test/Downloads/node_modules/big.bin');
+
+      // A precise pattern excludes only the intended file.
+      const analyzerNm = new Analyzer({
+        sizeThresholdMB: 100,
+        excludePatterns: ['node_modules'],
+      });
+      const resultNm = analyzerNm.analyze(files);
+      const pathsNm = resultNm.suggestions.map(s => s.file.path);
+      expect(pathsNm).toContain('/Users/test/Downloads/node-installer.dmg');
+      expect(pathsNm).not.toContain('/Users/test/Downloads/node_modules/big.bin');
+
+      // Glob wildcards work against the basename.
+      const analyzerGlob = new Analyzer({
+        sizeThresholdMB: 100,
+        excludePatterns: ['*.dmg'],
+      });
+      const resultGlob = analyzerGlob.analyze(files);
+      const pathsGlob = resultGlob.suggestions.map(s => s.file.path);
+      expect(pathsGlob).not.toContain('/Users/test/Downloads/node-installer.dmg');
+      expect(pathsGlob).toContain('/Users/test/Downloads/node_modules/big.bin');
     });
 
     it('should filter by category when specified', () => {

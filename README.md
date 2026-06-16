@@ -131,7 +131,7 @@ npm start
 
 **Filtering options:**
 
-- `--exclude-patterns=node_modules,dist`: Comma-separated path patterns to skip.
+- `--exclude-patterns=node_modules,dist,*.dmg`: Comma-separated glob patterns (minimatch) to skip. Each pattern is matched against the full path, the basename, and each path segment — so `node_modules` skips that directory but `node` no longer accidentally matches `node-installer.dmg`. Use globs like `*.dmg` or `**/cache/**` for finer control.
 - `--only-category=trash`: Only suggest files from a specific category.
 
 **Deletion options:**
