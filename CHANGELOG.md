@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Filled the `package.json` `author` field and added a GitHub repository
+  description ("CLI to scan and free disk space on macOS") so the project is
+  identifiable at a glance and discoverable in search
+  ([#7](https://github.com/J-MaFf/mac-space-cleaner/issues/7)).
+
 - `--exclude-patterns` now uses minimatch glob matching instead of naive
   substring matching. Patterns are tested against the full path, the basename,
   and each path segment, so `node` no longer wrongly excludes
