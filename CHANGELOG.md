@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Non-interactive `--yes`/`--auto-delete` runs now print a pre-delete summary
+  (total reclaimable size + top-N paths by impact) before any deletion proceeds
+  ([#5](https://github.com/J-MaFf/mac-space-cleaner/issues/5)).
 - `--auto-delete` flag for explicit non-interactive deletion with no prompt
   (`--yes` is an alias). This replaces the old, surprising `--confirm-delete`
   bypass behavior ([#2](https://github.com/J-MaFf/mac-space-cleaner/issues/2)).

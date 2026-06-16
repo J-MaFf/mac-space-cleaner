@@ -58,6 +58,26 @@ function printTrashPaths(suggestions: Suggestion[], sampleSize = 20): void {
   }
 }
 
+// Print an overall pre-delete summary (total reclaimable size + top-N paths)
+// so that even a non-interactive --yes/--auto-delete run announces what it is
+// about to remove before any deletion happens (issue #5).
+function printPreDeleteSummary(suggestions: Suggestion[], topN = 10): void {
+  const totalSize = suggestions.reduce((acc, s) => acc + s.file.size, 0);
+  console.log(
+    `\nPre-delete summary: ${suggestions.length} file(s), ${fmtBytes(totalSize)} reclaimable.`
+  );
+  const top = suggestions.slice(0, topN); // already sorted by score then size
+  if (top.length) {
+    console.log(`Top ${top.length} by impact:`);
+    for (const s of top) {
+      console.log(`  - [${s.category}] ${s.file.path} (${fmtBytes(s.file.size)}) — ${s.reason}`);
+    }
+    if (suggestions.length > top.length) {
+      console.log(`  ... and ${suggestions.length - top.length} more`);
+    }
+  }
+}
+
 async function main() {
   const opts = parseArgs(process.argv);
   const scanner = new Scanner({ maxDepth: opts.maxDepth, maxFiles: opts.maxFiles });
@@ -92,6 +112,12 @@ async function main() {
     // --auto-delete or --yes. --confirm-delete now ALWAYS shows a confirmation
     // prompt, matching the safety expectation set by its name.
     let shouldDelete = opts.autoDelete || opts.yes;
+
+    // Non-interactive delete (--yes/--auto-delete) prints a full pre-delete
+    // summary so a no-prompt run still announces what it will remove (issue #5).
+    if (shouldDelete) {
+      printPreDeleteSummary(analysis.suggestions);
+    }
 
     // --confirm-delete (and --interactive) require an interactive y/N prompt.
     if ((opts.confirmDelete || opts.interactive) && !shouldDelete) {
