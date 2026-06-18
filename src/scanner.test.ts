@@ -16,6 +16,8 @@ describe('Scanner', () => {
     it('should scan default paths when none provided', async () => {
       const scanner = new Scanner();
 
+      // Mock existsSync to return true so default paths pass the filter
+      mockFs.existsSync.mockReturnValue(true);
       // Mock readdirSync to return empty array (simulate no files)
       mockFs.readdirSync.mockReturnValue([]);
 
