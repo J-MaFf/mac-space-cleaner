@@ -72,8 +72,8 @@ describe('Analyzer', () => {
       ];
 
       const result = analyzer.analyze(files);
-      // Without excludePatterns, both should be suggested as large
-      expect(result.suggestions.length).toBe(0); // other category not suggested
+      // Without excludePatterns, both files exceed the size threshold and are suggested as 'large'
+      expect(result.suggestions.length).toBe(2);
 
       const analyzerWithExclude = new Analyzer({
         sizeThresholdMB: 100,
