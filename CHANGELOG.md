@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Filled the `package.json` `author` field and added a GitHub repository
+  description ("CLI to scan and free disk space on macOS") so the project is
+  identifiable at a glance and discoverable in search
+  ([#7](https://github.com/J-MaFf/mac-space-cleaner/issues/7)).
+
+- `--exclude-patterns` now uses minimatch glob matching instead of naive
+  substring matching. Patterns are tested against the full path, the basename,
+  and each path segment, so `node` no longer wrongly excludes
+  `node-installer.dmg` while `node_modules` and globs like `*.dmg` still work
+  ([#6](https://github.com/J-MaFf/mac-space-cleaner/issues/6)).
+
+### Fixed
+
+- `~/.Trash` contents are no longer bulk-deleted behind a count-only prompt.
+  Before any deletion (including non-interactive `--yes`/`--auto-delete`), the
+  actual Trash paths and sizes are now printed — capped at a 20-item sample with
+  an "N more" line ([#4](https://github.com/J-MaFf/mac-space-cleaner/issues/4)).
+
+- Added a home-directory safety guard in the deleter: every path is verified to
+  be a strict descendant of `os.homedir()` (symlinks/traversal resolved) before
+  any `rmSync`/`unlinkSync`. Paths like `/`, `/usr`, or `~/..` are now refused
+  and counted as "blocked" instead of deleted
+  ([#3](https://github.com/J-MaFf/mac-space-cleaner/issues/3)).
+
+- `--confirm-delete` no longer deletes without prompting. It now always shows an
+  interactive `[y/N]` confirmation prompt, matching the safety its name implies
+  ([#2](https://github.com/J-MaFf/mac-space-cleaner/issues/2)).
+
+### Added
+
+- Non-interactive `--yes`/`--auto-delete` runs now print a pre-delete summary
+  (total reclaimable size + top-N paths by impact) before any deletion proceeds
+  ([#5](https://github.com/J-MaFf/mac-space-cleaner/issues/5)).
+- `--auto-delete` flag for explicit non-interactive deletion with no prompt
+  (`--yes` is an alias). This replaces the old, surprising `--confirm-delete`
+  bypass behavior ([#2](https://github.com/J-MaFf/mac-space-cleaner/issues/2)).
+
 ### Planned Features
 
 - Interactive UI mode for easier file selection
