@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "mac_space_cleaner",
+  "project_id": "1150c925-4902-4acc-9972-b22ba307722e"
+}
