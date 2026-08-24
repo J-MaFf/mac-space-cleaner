@@ -71,6 +71,16 @@ backup/
 *.db-shm
 db.sqlite
 bd.db
+
+# Dolt-only sync convention (git-policies skill, Golden Rule #18):
+# bead state syncs via `bd dolt push`/`pull` on refs/dolt/data, not via
+# git-tracked files. issues.jsonl/interactions.jsonl are passive exports
+# bd rewrites on every mutation; hooks/ shims are inert unless opted into
+# via `bd hooks install`. None of these should be tracked.
+issues.jsonl
+interactions.jsonl
+hooks/
+
 # NOTE: Do NOT add negation patterns here.
 # They would override fork protection in .git/info/exclude.
 # Config files (metadata.json, config.yaml) are tracked by git by default

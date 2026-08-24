@@ -24,36 +24,52 @@ bd close <id>         # Complete work
 
 **Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
 
-## Agent Context Profiles
+## Layered Workflow: GitHub Issues + Beads
 
-The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
+This repo follows the `git-policies` layered model: **GitHub Issues are the shippable
+unit** (branch → PR → `Fixes #N` → squash-merge, human-gated). **Beads is the
+execution/memory layer underneath** — the `bd ready` queue, the dependency graph, and
+`bd remember` persistent memory. Beads never replaces the GitHub Issue / PR flow above it.
 
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
+### Durable sync — `bd dolt push` runs automatically
 
-## Session Completion
+Push immediately after every bead mutation (`bd create` / `bd update` / `bd close`) —
+no confirmation needed, don't batch it for session close:
 
-This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
+```bash
+bd dolt push
+```
 
-1. **File issues for remaining work** - Create beads for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **Handle git/sync by active profile**:
-   ```bash
-   # Conservative/minimal/default: report status and proposed commands; wait for approval.
-   git status
+This syncs `refs/dolt/data` on `origin`, which is separate from `refs/heads/*` and is
+**not** gated by branch protection on `main`. Use `bd dolt pull` to pick up other
+machines' changes, and `bd bootstrap` on a fresh clone.
 
-   # Team-maintainer opt-in only, unless current instructions forbid it:
-   git pull --rebase
-   git push
-   git status
-   ```
-5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
+### Session close
+
+Make code changes durable on the **feature branch** — never commit or push to `main`
+directly:
+
+```bash
+git add <files> && git commit -S -m "..."   # signed commit, on the feature branch
+git push -u origin <feature-branch>          # push the branch, never main
+bd dolt push                                 # bead state should already be synced by now
+```
+
+Then open/update the PR (`Fixes #N`, assignee `J-MaFf`, appropriate label) and **stop at
+the merge gate**. Merging to `main` always stays human-gated via PR review — never
+auto-merge, regardless of how freely bead state or the feature branch sync.
+
+### Memory
+
+`bd remember "<insight>"` is for **repo-scoped** knowledge that should travel with this
+repo (in the Dolt DB, synced like everything else above). It does not replace the
+user's global/cross-repo Claude memory system — that stays the home for context that
+isn't specific to this repo.
 
 **Critical rules:**
 - Explicit user or orchestrator instructions override this Beads block.
-- Do not commit or push without clear authority from the active profile or the current user request.
+- Never commit or push `.beads/` changes to `main` directly; feature-branch pushes and
+  `bd dolt push` are fine, merges to `main` are not.
 - If a required sync or push is blocked, stop and report the exact command and error.
 <!-- END BEADS INTEGRATION -->
 
