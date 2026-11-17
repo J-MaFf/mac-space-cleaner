@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added `bd prime` PreCompact hook in `.claude/settings.json` so sessions reload beads context ([#31](https://github.com/J-MaFf/mac-space-cleaner/issues/31))
+
 ### Changed
 
 - Adopted `bd` (beads) as the Dolt-backed dependency-graph task/memory layer
